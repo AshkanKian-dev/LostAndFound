@@ -11,6 +11,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/OpenWorld.unity
     guid: 5702c12db255f8348ac7575b69126c3c
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 69f31202a7e25174e873def537b00a45
+  - enabled: 1
+    path: Assets/Scenes/MainWorld.unity
+    guid: 0fb85d1c84844a741b90a035d716bb65
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
