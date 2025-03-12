@@ -1,19 +1,22 @@
 using UnityEngine;
-using TMPro; // For UI text
+using System.Collections.Generic;
 
-public class NPCDialogue : MonoBehaviour, IInteractable
+public class NPCDialogue : MonoBehaviour
 {
-    public List<string> wordsToTeach = new List<string>(); // List of words NPC can teach
-    private string originalDialogue = "zok! mivor talun?"; // Default dialogue before learning
+    // List of words the NPC can teach
+    public List<string> wordsToTeach = new List<string>();
 
-    public void Interact()
-    {
-        TeachPlayerWords();
-    }
+    // An example default dialogue string (optional)
+    private string originalDialogue = "zok! mivor talun?";
 
     void Start()
     {
-        LanguageManager.Instance.WordLearned += (word, translation) => DisplayDialogue();
+        // If your LanguageManager has an event for when a word is learned, you can subscribe here
+        if (LanguageManager.Instance != null)
+        {
+            LanguageManager.Instance.WordLearned += (word, translation) => DisplayDialogue();
+        }
+
         DisplayDialogue();
     }
 
@@ -21,17 +24,27 @@ public class NPCDialogue : MonoBehaviour, IInteractable
     {
         if (LanguageManager.Instance != null)
         {
-            dialogueText.text = LanguageManager.Instance.TranslateSentence(originalDialogue);
+            // Example: Print the translated sentence to the console (or update a UI text)
+            Debug.Log("NPC says: " + LanguageManager.Instance.TranslateSentence(originalDialogue));
+        }
+        else
+        {
+            Debug.Log("NPC says: " + originalDialogue);
         }
     }
 
-    public void TeachPlayerWord(string word)
+    // Teaches all words in wordsToTeach to the player
+    public void TeachPlayerWords()
     {
-        foreach (string word in wordsToTeach)
+        if (LanguageManager.Instance != null)
         {
-            LanguageManager.Instance.LearnWord(word); // Learn all words in the list
+            foreach (string word in wordsToTeach)
+            {
+                LanguageManager.Instance.LearnWord(word);
+            }
+
+            wordsToTeach.Clear(); // Prevent re-teaching
+            DisplayDialogue();
         }
-        wordsToTeach.Clear(); // Prevent learning again from the same NPC
-        DisplayDialogue(); // Update dialogue to reflect new understanding
     }
 }

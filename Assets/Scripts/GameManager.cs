@@ -30,8 +30,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        // Your existing restart logic
-        Checkpoint.ResetCheckpoint();
+        // Your existing restart logic        
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();

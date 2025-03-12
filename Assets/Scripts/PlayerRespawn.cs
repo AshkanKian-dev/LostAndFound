@@ -3,26 +3,35 @@
 public class PlayerRespawn : MonoBehaviour
 {
     private Vector3 originalSpawnPoint;
+    private Rigidbody2D rb;
 
     void Start()
     {
         originalSpawnPoint = transform.position;
+        rb = GetComponent<Rigidbody2D>();
 
-        // Always reset checkpoint data when restarting the scene
-        if (!PlayerPrefs.HasKey("CheckpointTouched"))
+        // Attempt to load the checkpoint from SaveManager
+        Vector3 checkpointPos;
+        if (SaveManager.LoadCheckpoint(out checkpointPos))
         {
-            Checkpoint.ResetCheckpoint();
+            transform.position = checkpointPos;
+        }
+        else
+        {
+            transform.position = originalSpawnPoint;
         }
     }
 
     public void LoadCheckpoint()
     {
-        if (PlayerPrefs.HasKey("CheckpointX"))
+        Vector3 checkpointPos;
+        if (SaveManager.LoadCheckpoint(out checkpointPos))
         {
-            float x = PlayerPrefs.GetFloat("CheckpointX");
-            float y = PlayerPrefs.GetFloat("CheckpointY");
-
-            transform.position = new Vector3(x, y, 0);
+            transform.position = checkpointPos;
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero; // Reset velocity to avoid physics issues
+            }
         }
         else
         {
