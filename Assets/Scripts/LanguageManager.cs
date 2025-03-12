@@ -11,10 +11,14 @@ public class LanguageManager : MonoBehaviour
         { "mivor", "friend" },
         { "talun", "food" },
         { "varak", "danger" }
+        { "shari", "welcome" },
+        { "tavok", "house" }
     };
 
     private Dictionary<string, int> wordExposure = new Dictionary<string, int>(); // Tracks exposure count
     private HashSet<string> learnedWords = new HashSet<string>();
+    private Dictionary<string, float> wordCooldown = new Dictionary<string, float>(); // Prevents rapid learning
+    private float learnCooldown = 5f;  // 5-second cooldown
 
     public delegate void OnWordLearned(string word, string translation);
     public event OnWordLearned WordLearned; // Event for UI updates
@@ -38,24 +42,44 @@ public class LanguageManager : MonoBehaviour
     public string TranslateSentence(string sentence)
     {
         string[] words = sentence.Split(' ');
-        for (int i = 0; i < words.Length; i++)
+        List<string> translatedWords = new List<string>();
+
+        foreach (string word in words)
         {
-            if (wordDictionary.ContainsKey(words[i]))
+            if (wordDictionary.ContainsKey(word))
             {
-                if (learnedWords.Contains(words[i]))
+                if (learnedWords.Contains(word))
                 {
-                    words[i] = wordDictionary[words[i]]; // Fully translated
+                    translatedWords.Add(wordDictionary[word]); // Fully translated
                 }
                 else
                 {
-                    words[i] = RevealPartialWord(words[i]); // Partial translation
+                    translatedWords.Add(RevealPartialWord(word)); // Partial translation
                 }
             }
+            else
+            {
+                translatedWords.Add(word); // Unknown words remain as they are
+            }
         }
-        return string.Join(" ", words);
+
+        return ConstructGrammaticallyCorrectSentence(translatedWords);
     }
 
     /// <summary>
+    /// Ensures translated sentences maintain proper grammar.
+    /// </summary>
+    private string ConstructGrammaticallyCorrectSentence(List<string> words)
+    {
+        if (words.Count == 0) return "";
+
+        // Capitalize first letter
+        words[0] = char.ToUpper(words[0][0]) + words[0].Substring(1);
+
+        // Join words into a sentence
+        return string.Join(" ", words) + ".";
+    }
+
     /// Reveals parts of a word based on exposure count.
     /// </summary>
     private string RevealPartialWord(string word)
@@ -97,13 +121,16 @@ public class LanguageManager : MonoBehaviour
     /// </summary>
     public void LearnWord(string word)
     {
-        if (wordDictionary.ContainsKey(word) && !learnedWords.Contains(word))
-        {
-            learnedWords.Add(word);
-            wordExposure.Remove(word); // Stop tracking exposure
+        if (!wordDictionary.ContainsKey(word) || learnedWords.Contains(word)) return;
 
-            WordLearned?.Invoke(word, wordDictionary[word]); // Notify UI
-        }
+        if (wordCooldown.ContainsKey(word) && Time.time - wordCooldown[word] < learnCooldown)
+            return; // Prevents spamming word learning
+
+        learnedWords.Add(word);
+        wordCooldown[word] = Time.time;
+        wordExposure.Remove(word); // Stop tracking exposure
+
+        WordLearned?.Invoke(word, wordDictionary[word]); // Notify UI
     }
 
     /// <summary>

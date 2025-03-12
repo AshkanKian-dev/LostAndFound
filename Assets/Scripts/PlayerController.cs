@@ -9,6 +9,11 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        // Load checkpoint position when the game starts
+        if (SaveManager.LoadCheckpoint(out Vector3 savedPosition))
+        {
+            transform.position = savedPosition;
+        }
     }
 
     void Update()

@@ -23,7 +23,7 @@ public class LearnableObject : MonoBehaviour, IInteractable
                 Debug.Log("You learned the word: " + wordToLearn);
             }
 
-            if (!isReusable)
+            if (!isReusable && !isNPC)
             {
                 learned = true;  // Prevent learning again if not reusable
                 Destroy(gameObject);  // Destroy object if it's not reusable (like in ItemLabel)
