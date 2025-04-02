@@ -90,7 +90,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -120,7 +120,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 513
+        width: 512
         height: 288
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -140,10 +140,10 @@ TextureImporter:
       name: beach_tiles_1
       rect:
         serializedVersion: 2
-        x: 518
-        y: 197
-        width: 85
-        height: 85
+        x: 519
+        y: 198
+        width: 83
+        height: 83
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -162,10 +162,10 @@ TextureImporter:
       name: beach_tiles_2
       rect:
         serializedVersion: 2
-        x: 614
-        y: 193
-        width: 21
-        height: 94
+        x: 615
+        y: 194
+        width: 19
+        height: 92
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,10 +184,10 @@ TextureImporter:
       name: beach_tiles_3
       rect:
         serializedVersion: 2
-        x: 512
-        y: 165
-        width: 96
-        height: 21
+        x: 513
+        y: 166
+        width: 94
+        height: 19
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,10 +206,10 @@ TextureImporter:
       name: beach_tiles_4
       rect:
         serializedVersion: 2
-        x: 612
-        y: 165
-        width: 24
-        height: 23
+        x: 613
+        y: 166
+        width: 22
+        height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -228,10 +228,10 @@ TextureImporter:
       name: beach_tiles_5
       rect:
         serializedVersion: 2
-        x: 550
-        y: 69
-        width: 85
-        height: 85
+        x: 551
+        y: 70
+        width: 83
+        height: 83
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -250,7 +250,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ae6e84873c549e34f83bfec39159b9fc
     internalID: 0
     vertices: []
     indices: 
@@ -259,7 +259,13 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      beach_tiles_0: -5458569773657436197
+      beach_tiles_1: 8029644872600839482
+      beach_tiles_2: 9071794699827772475
+      beach_tiles_3: -3648617285590993840
+      beach_tiles_4: 3434115489554499919
+      beach_tiles_5: 237019003316265987
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

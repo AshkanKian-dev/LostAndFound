@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: d97eb5e70b7b2e841a4a1e5841238fce
+guid: 14859fe008490a94289b1bfb30e60627
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4097144792221710411
-    second: coconut_0
+      213: 8030489705071303597
+    second: Lost and found Pause UI_0
   - first:
-      213: 3292874231492293847
-    second: coconut_1
+      213: 7950793282742078443
+    second: Lost and found Pause UI_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: coconut_0
+      name: Lost and found Pause UI_0
       rect:
         serializedVersion: 2
-        x: 49
-        y: 90
-        width: 116
-        height: 111
+        x: 679
+        y: 708
+        width: 570
+        height: 193
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,20 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b4877bd1b7bfbd830800000000000000
-      internalID: 4097144792221710411
+      spriteID: dabd433e6d7027f60800000000000000
+      internalID: 8030489705071303597
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: coconut_1
+      name: Lost and found Pause UI_1
       rect:
         serializedVersion: 2
-        x: 203
-        y: 90
-        width: 117
-        height: 94
+        x: 683
+        y: 471
+        width: 578
+        height: 193
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7d4b22acaa3a2bd20800000000000000
-      internalID: 3292874231492293847
+      spriteID: beb47649d54e65e60800000000000000
+      internalID: 7950793282742078443
       vertices: []
       indices: 
       edges: []
@@ -160,8 +160,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      coconut_0: 4097144792221710411
-      coconut_1: 3292874231492293847
+      Lost and found Pause UI_0: 8030489705071303597
+      Lost and found Pause UI_1: 7950793282742078443
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

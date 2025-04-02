@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: d97eb5e70b7b2e841a4a1e5841238fce
+guid: df8cd710065564143a11283f06d27d13
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4097144792221710411
-    second: coconut_0
-  - first:
-      213: 3292874231492293847
-    second: coconut_1
+      213: 3971281516235114933
+    second: Journal icon temp 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: coconut_0
+      name: Journal icon temp 1_0
       rect:
         serializedVersion: 2
-        x: 49
-        y: 90
-        width: 116
-        height: 111
+        x: 1807
+        y: 962
+        width: 64
+        height: 86
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,30 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b4877bd1b7bfbd830800000000000000
-      internalID: 4097144792221710411
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: coconut_1
-      rect:
-        serializedVersion: 2
-        x: 203
-        y: 90
-        width: 117
-        height: 94
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7d4b22acaa3a2bd20800000000000000
-      internalID: 3292874231492293847
+      spriteID: 5b9c44e8f73dc1730800000000000000
+      internalID: 3971281516235114933
       vertices: []
       indices: 
       edges: []
@@ -160,8 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      coconut_0: 4097144792221710411
-      coconut_1: 3292874231492293847
+      Journal icon temp 1_0: 3971281516235114933
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

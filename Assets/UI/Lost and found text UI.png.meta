@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: d97eb5e70b7b2e841a4a1e5841238fce
+guid: 09deb76b5b6ba35488e5a7cb4e2ed1d4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4097144792221710411
-    second: coconut_0
+      213: 3745245622646214081
+    second: Lost and found text UI_0
   - first:
-      213: 3292874231492293847
-    second: coconut_1
+      213: -6162370528148724320
+    second: Lost and found text UI_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: coconut_0
+      name: Lost and found text UI_0
       rect:
         serializedVersion: 2
-        x: 49
-        y: 90
-        width: 116
-        height: 111
+        x: 121
+        y: 50
+        width: 13
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,20 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b4877bd1b7bfbd830800000000000000
-      internalID: 4097144792221710411
+      spriteID: 1cd0a66fc09c9f330800000000000000
+      internalID: 3745245622646214081
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: coconut_1
+      name: Lost and found text UI_1
       rect:
         serializedVersion: 2
-        x: 203
-        y: 90
-        width: 117
-        height: 94
+        x: 133
+        y: 0
+        width: 1787
+        height: 373
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7d4b22acaa3a2bd20800000000000000
-      internalID: 3292874231492293847
+      spriteID: 0a5eb5f77acda7aa0800000000000000
+      internalID: -6162370528148724320
       vertices: []
       indices: 
       edges: []
@@ -160,8 +160,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      coconut_0: 4097144792221710411
-      coconut_1: 3292874231492293847
+      Lost and found text UI_0: 3745245622646214081
+      Lost and found text UI_1: -6162370528148724320
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

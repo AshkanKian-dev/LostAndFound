@@ -159,7 +159,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      cavetileset_0: -6585925228797753830
+      cavetileset_1: -2730814386527267839
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
