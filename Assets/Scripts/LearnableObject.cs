@@ -7,6 +7,7 @@ public class LearnableObject : MonoBehaviour, IInteractable
     public bool isNPC = false;    // False for items, true for NPCs
     public bool isReusable = false; // Whether the word source can be reused
     private bool learned = false; // Track if the word has been learned already
+   
 
     // Called when the player presses "F" to interact
     public void Interact()

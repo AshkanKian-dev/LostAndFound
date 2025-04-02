@@ -1,39 +1,33 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class NPCDialogue : MonoBehaviour
+public class NPCDialogue : MonoBehaviour, IInteractable
 {
-    // List of words the NPC can teach
+    // List of words the NPC can teach (if applicable)
     public List<string> wordsToTeach = new List<string>();
 
-    // An example default dialogue string (optional)
+    // Example dialogue text
     private string originalDialogue = "zok! mivor talun?";
 
     void Start()
     {
-        // If your LanguageManager has an event for when a word is learned, you can subscribe here
-        if (LanguageManager.Instance != null)
-        {
-            LanguageManager.Instance.WordLearned += (word, translation) => DisplayDialogue();
-        }
-
         DisplayDialogue();
     }
 
-    void DisplayDialogue()
+    // Called when the player interacts with this NPC
+    public void Interact()
     {
-        if (LanguageManager.Instance != null)
-        {
-            // Example: Print the translated sentence to the console (or update a UI text)
-            Debug.Log("NPC says: " + LanguageManager.Instance.TranslateSentence(originalDialogue));
-        }
-        else
-        {
-            Debug.Log("NPC says: " + originalDialogue);
-        }
+        ShowDialogue();
     }
 
-    // Teaches all words in wordsToTeach to the player
+    // Displays the dialogue (for now just logs to the Console)
+    public void ShowDialogue()
+    {
+        string translated = LanguageManager.Instance.TranslateSentence(originalDialogue);
+        DialogueUIManager.Instance.ShowDialogue(translated);
+    }
+
+    // Optionally, this method can teach words to the player
     public void TeachPlayerWords()
     {
         if (LanguageManager.Instance != null)
@@ -42,9 +36,14 @@ public class NPCDialogue : MonoBehaviour
             {
                 LanguageManager.Instance.LearnWord(word);
             }
-
             wordsToTeach.Clear(); // Prevent re-teaching
             DisplayDialogue();
         }
+    }
+
+    void DisplayDialogue()
+    {
+        // For demonstration, simply output to the console.
+        Debug.Log("NPC dialogue: " + originalDialogue);
     }
 }

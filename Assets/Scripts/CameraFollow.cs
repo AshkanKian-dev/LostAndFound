@@ -9,7 +9,7 @@ public class CameraFollow : MonoBehaviour
     public Vector3 offset = new Vector3(0, 0, -10);
 
     // How quickly the camera catches up to the player
-    public float smoothSpeed = 0.125f;
+    public float smoothSpeed = 1f;
 
     void LateUpdate()
     {
@@ -23,4 +23,3 @@ public class CameraFollow : MonoBehaviour
         }
     }
 }
-
