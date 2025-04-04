@@ -10,7 +10,7 @@ public class LanguageManager : MonoBehaviour
         { "zok", "hello" },
         { "mivor", "friend" },
         { "talun", "food" },
-        { "varak", "danger" }
+        { "varak", "danger" },
         { "shari", "welcome" },
         { "tavok", "house" }
     };

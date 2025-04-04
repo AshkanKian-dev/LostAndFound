@@ -1,37 +1,49 @@
 using UnityEngine;
-using TMPro; // For UI text
+using System.Collections.Generic;
 
 public class NPCDialogue : MonoBehaviour, IInteractable
 {
-    public List<string> wordsToTeach = new List<string>(); // List of words NPC can teach
-    private string originalDialogue = "zok! mivor talun?"; // Default dialogue before learning
+    // List of words the NPC can teach (if applicable)
+    public List<string> wordsToTeach = new List<string>();
 
-    public void Interact()
-    {
-        TeachPlayerWords();
-    }
+    // Example dialogue text
+    private string originalDialogue = "zok! mivor talun?";
 
     void Start()
     {
-        LanguageManager.Instance.WordLearned += (word, translation) => DisplayDialogue();
         DisplayDialogue();
+    }
+
+    // Called when the player interacts with this NPC
+    public void Interact()
+    {
+        ShowDialogue();
+    }
+
+    // Displays the dialogue (for now just logs to the Console)
+    public void ShowDialogue()
+    {
+        string translated = LanguageManager.Instance.TranslateSentence(originalDialogue);
+        DialogueUIManager.Instance.ShowDialogue(translated);
+    }
+
+    // Optionally, this method can teach words to the player
+    public void TeachPlayerWords()
+    {
+        if (LanguageManager.Instance != null)
+        {
+            foreach (string word in wordsToTeach)
+            {
+                LanguageManager.Instance.LearnWord(word);
+            }
+            wordsToTeach.Clear(); // Prevent re-teaching
+            DisplayDialogue();
+        }
     }
 
     void DisplayDialogue()
     {
-        if (LanguageManager.Instance != null)
-        {
-            dialogueText.text = LanguageManager.Instance.TranslateSentence(originalDialogue);
-        }
-    }
-
-    public void TeachPlayerWord(string word)
-    {
-        foreach (string word in wordsToTeach)
-        {
-            LanguageManager.Instance.LearnWord(word); // Learn all words in the list
-        }
-        wordsToTeach.Clear(); // Prevent learning again from the same NPC
-        DisplayDialogue(); // Update dialogue to reflect new understanding
+        // For demonstration, simply output to the console.
+        Debug.Log("NPC dialogue: " + originalDialogue);
     }
 }
