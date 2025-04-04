@@ -1,49 +1,71 @@
 using UnityEngine;
-using System.Collections.Generic;
+using TMPro;
 
-public class NPCDialogue : MonoBehaviour, IInteractable
+public class NPCDialogue : MonoBehaviour
 {
-    // List of words the NPC can teach (if applicable)
-    public List<string> wordsToTeach = new List<string>();
+    [SerializeField] private string[] dialogueLines;
+    [SerializeField] private TMP_Text dialogueText;  // Reference to your dialogue UI box
+    private int currentLine = 0;
 
-    // Example dialogue text
-    private string originalDialogue = "zok! mivor talun?";
-
-    void Start()
-    {
-        DisplayDialogue();
-    }
-
-    // Called when the player interacts with this NPC
     public void Interact()
     {
-        ShowDialogue();
+        TeachPlayerWords();
     }
 
-    // Displays the dialogue (for now just logs to the Console)
-    public void ShowDialogue()
-    {
-        string translated = LanguageManager.Instance.TranslateSentence(originalDialogue);
-        DialogueUIManager.Instance.ShowDialogue(translated);
-    }
 
-    // Optionally, this method can teach words to the player
     public void TeachPlayerWords()
     {
-        if (LanguageManager.Instance != null)
-        {
-            foreach (string word in wordsToTeach)
-            {
-                LanguageManager.Instance.LearnWord(word);
-            }
-            wordsToTeach.Clear(); // Prevent re-teaching
-            DisplayDialogue();
-        }
+        LanguageManager.Instance.LearnRandomWord();
+        ShowDialogueLine();  // After learning, show the next line
     }
 
-    void DisplayDialogue()
+    public void ShowDialogueLine()
     {
-        // For demonstration, simply output to the console.
-        Debug.Log("NPC dialogue: " + originalDialogue);
+        if (currentLine >= dialogueLines.Length)
+        {
+            currentLine = 0;
+            dialogueText.text = "";
+            return;
+        }
+
+        string processedLine = ProcessLine(dialogueLines[currentLine]);
+        dialogueText.text = processedLine;
+        currentLine++;
+    }
+
+    private string ProcessLine(string line)
+    {
+        string[] words = line.Split(' ');
+        for (int i = 0; i < words.Length; i++)
+        {
+            string cleanWord = words[i].TrimEnd('.', ',', '!', '?').ToLower();
+            if (!LanguageManager.Instance.learnedWords.Contains(cleanWord))
+            {
+                words[i] = GenerateGibberish(words[i]);
+            }
+        }
+
+        return string.Join(" ", words);
+    }
+
+    private string GenerateGibberish(string originalWord)
+    {
+        string gibberish = "";
+        int length = originalWord.Length;
+        string charset = "#@%!?&*";
+
+        for (int i = 0; i < length; i++)
+        {
+            gibberish += charset[Random.Range(0, charset.Length)];
+        }
+
+        // Preserve punctuation
+        char lastChar = originalWord[originalWord.Length - 1];
+        if (!char.IsLetterOrDigit(lastChar))
+        {
+            gibberish = gibberish.Substring(0, gibberish.Length - 1) + lastChar;
+        }
+
+        return gibberish;
     }
 }

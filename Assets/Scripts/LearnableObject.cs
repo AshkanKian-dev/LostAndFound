@@ -2,32 +2,32 @@ using UnityEngine;
 
 public class LearnableObject : MonoBehaviour, IInteractable
 {
-    public string wordToLearn;    // Word that will be learned
+    public string wordToLearn;        // Optional: Used for fixed objects like labeled signs
     public NPCDialogue npcDialogue;  // For NPC-specific behavior
-    public bool isNPC = false;    // False for items, true for NPCs
-    public bool isReusable = false; // Whether the word source can be reused
-    private bool learned = false; // Track if the word has been learned already
-   
+    public bool isNPC = false;        // False for items, true for NPCs
+    public bool isReusable = false;   // Can this be used repeatedly?
+    private bool learned = false;     // Track if it's been used (for one-time objects)
 
-    // Called when the player presses "F" to interact
     public void Interact()
     {
-        if (!learned)
+        if (!learned || isReusable)
         {
-            // If this is an NPC, call the NPC's TeachPlayerWords() method
+            bool success = false;
+
+            // NPC logic
             if (isNPC && npcDialogue != null)
             {
                 npcDialogue.TeachPlayerWords();
+                success = true;
             }
+            // Object logic
             else
             {
-                // Otherwise, teach a single word directly
-                LanguageManager.Instance.LearnWord(wordToLearn);
-                Debug.Log("You learned the word: " + wordToLearn);
+                success = LanguageManager.Instance.LearnRandomWord();
             }
 
-            // If not reusable and not an NPC, mark learned and destroy the object
-            if (!isReusable && !isNPC)
+            // Destroy or mark learned only if it's not reusable and learning succeeded
+            if (!isReusable && !isNPC && success)
             {
                 learned = true;
                 Destroy(gameObject);
@@ -35,12 +35,10 @@ public class LearnableObject : MonoBehaviour, IInteractable
         }
     }
 
-    // Detect if the player enters the interaction range
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !learned)
+        if (other.CompareTag("Player") && (!learned || isReusable))
         {
-            // Interaction logic triggers when the player presses "F"
             InteractionSystem interaction = other.GetComponent<InteractionSystem>();
             if (interaction != null)
             {
