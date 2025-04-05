@@ -1,38 +1,42 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LearnableObject : MonoBehaviour, IInteractable
 {
+    [SerializeField] private List<string> learnableWords = new List<string>();
     public string wordToLearn;        // Optional: Used for fixed objects like labeled signs
-    public NPCDialogue npcDialogue;  // For NPC-specific behavior
     public bool isNPC = false;        // False for items, true for NPCs
     public bool isReusable = false;   // Can this be used repeatedly?
     private bool learned = false;     // Track if it's been used (for one-time objects)
 
     public void Interact()
     {
-        if (!learned || isReusable)
+        if (learnableWords.Count == 0)
         {
-            bool success = false;
-
-            // NPC logic
-            if (isNPC && npcDialogue != null)
-            {
-                npcDialogue.TeachPlayerWords();
-                success = true;
-            }
-            // Object logic
-            else
-            {
-                success = LanguageManager.Instance.LearnRandomWord();
-            }
-
-            // Destroy or mark learned only if it's not reusable and learning succeeded
-            if (!isReusable && !isNPC && success)
-            {
-                learned = true;
-                Destroy(gameObject);
-            }
+            Debug.LogWarning($"[LearnableObject] No words assigned to {gameObject.name}.");
+            return;
         }
+
+        // Filter for unlearned words only
+        List<string> unlearned = learnableWords
+            .Where(word => !LanguageManager.Instance.IsWordLearned(word))
+            .ToList();
+
+        if (unlearned.Count == 0)
+        {
+            Debug.Log($"[LearnableObject] All words already learned from {gameObject.name}.");
+            return;
+        }
+
+        // Choose one unlearned word at random
+        string wordToLearn = unlearned[Random.Range(0, unlearned.Count)];
+
+        // Teach it
+        LanguageManager.Instance.LearnWord(wordToLearn);
+        Debug.Log($"[LearnableObject] Interacted with {gameObject.name}, learned: {wordToLearn}");
+
+        learned = true;
     }
 
     void OnTriggerEnter2D(Collider2D other)

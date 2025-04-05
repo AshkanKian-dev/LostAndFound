@@ -3,16 +3,23 @@ using UnityEngine;
 public class InteractionSystem : MonoBehaviour
 {
     public float interactRange = 2f;
-    private IInteractable nearbyInteractable;  // Stores the currently interactable object
+    private IInteractable nearbyInteractable;
 
     void Update()
     {
         DetectInteractable();
 
-        // Check if player presses "F" to interact
-        if (Input.GetKeyDown(KeyCode.F) && nearbyInteractable != null)
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            nearbyInteractable.Interact();
+            if (nearbyInteractable != null)
+            {
+                Debug.Log($"[InteractionSystem] Interacting with: {nearbyInteractable}");
+                nearbyInteractable.Interact();
+            }
+            else
+            {
+                Debug.Log("[InteractionSystem] No object to interact with.");
+            }
         }
     }
 
@@ -24,16 +31,15 @@ public class InteractionSystem : MonoBehaviour
             IInteractable interactable = col.GetComponent<IInteractable>();
             if (interactable != null)
             {
-                nearbyInteractable = interactable;  // Register this interactable object
-                return;  // Exit loop as we've found an interactable object
+                nearbyInteractable = interactable;
+                return;
             }
         }
-        nearbyInteractable = null;  // No interactable found within range
+        nearbyInteractable = null;
     }
 
-    // Register an interactable object (called when the player is in range)
     public void RegisterInteractable(IInteractable interactable)
     {
-        nearbyInteractable = interactable;  // Store the interactable object
+        nearbyInteractable = interactable;
     }
 }

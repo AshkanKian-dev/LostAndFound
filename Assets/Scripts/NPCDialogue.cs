@@ -12,7 +12,6 @@ public class NPCDialogue : MonoBehaviour
         TeachPlayerWords();
     }
 
-
     public void TeachPlayerWords()
     {
         LanguageManager.Instance.LearnRandomWord();
@@ -39,9 +38,13 @@ public class NPCDialogue : MonoBehaviour
         for (int i = 0; i < words.Length; i++)
         {
             string cleanWord = words[i].TrimEnd('.', ',', '!', '?').ToLower();
-            if (!LanguageManager.Instance.learnedWords.Contains(cleanWord))
+            if (!LanguageManager.Instance.IsWordLearned(cleanWord))
             {
-                words[i] = GenerateGibberish(words[i]);
+                words[i] = GenerateGibberish(words[i]); // Generate gibberish for unlearned words
+            }
+            else
+            {
+                words[i] = LanguageManager.Instance.GetTranslation(cleanWord); // Translate learned words
             }
         }
 
