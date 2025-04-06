@@ -1,11 +1,15 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class NPCDialogue : MonoBehaviour, IInteractable
 {
     [Header("NPC Dialogue Settings")]
     public List<string> wordsToTeach = new List<string>();
-    [TextArea] public string originalDialogue = "zok! mivor talun?";
+    [TextArea] public string originalDialogue = "salve quid agis?"; // Latin/Temple
+    [TextArea] public string translatedDialogue = "Hello, how are you?"; // English
+
+    [Header("Language Requirement")]
+    public LanguageData requiredLanguage; // Now using ScriptableObject reference
 
     private bool playerInRange = false;
     private bool hasTaughtWords = false;
@@ -23,11 +27,25 @@ public class NPCDialogue : MonoBehaviour, IInteractable
         if (DialogueUIManager.Instance.IsDialogueActive())
         {
             DialogueUIManager.Instance.HideDialogue();
+            return;
+        }
+
+        // Show translated dialogue if the player knows the language
+        if (requiredLanguage != null)
+        {
+            if (LanguageManager.Instance.KnowsLanguage(requiredLanguage.languageName))
+            {
+                DialogueUIManager.Instance.ShowDialogue(translatedDialogue);
+            }
+            else
+            {
+                DialogueUIManager.Instance.ShowDialogue(originalDialogue);
+            }
         }
         else
         {
-            string translated = LanguageManager.Instance.TranslateSentence(originalDialogue);
-            DialogueUIManager.Instance.ShowDialogue(translated);
+            // No language restriction
+            DialogueUIManager.Instance.ShowDialogue(translatedDialogue);
         }
 
         if (!hasTaughtWords)

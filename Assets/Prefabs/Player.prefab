@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9071458622571507095}
   - component: {fileID: 1272040940714194884}
   - component: {fileID: 2621784423742032324}
+  - component: {fileID: 6027202200233154617}
   - component: {fileID: 5681048629796165224}
   m_Layer: 0
   m_Name: Player
@@ -30,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 1928900012988494997}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.39, y: -1.46, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 6.4883, y: 8.9227, z: 0}
+  m_LocalScale: {x: 8.144739, y: 8.144739, z: 8.144739}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 7ce24c1abf0978e4da374a6f5589bae6, type: 3}
+  m_Sprite: {fileID: -2173097144679825084, guid: 029de2af9274dbe448f5fc71feea6e56, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -117,7 +118,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &1272040940714194884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +143,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d123e6cc7cb8d84fa04fe2bdd927271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 10
+--- !u!114 &6027202200233154617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928900012988494997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5416d676ac488fb4eb01557e6563cd55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactRange: 2
+  interactKey: 102
 --- !u!70 &5681048629796165224
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -177,6 +192,6 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: 0.006565137, y: -0.006821214}
+  m_Size: {x: 0.19275826, y: 0.2439793}
   m_Direction: 0

@@ -13,8 +13,6 @@ GameObject:
   - component: {fileID: 7410591964364296187}
   - component: {fileID: 5034071408292895838}
   - component: {fileID: 5957304556754799002}
-  - component: {fileID: 855356541723564423}
-  - component: {fileID: 2297081782863652489}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -31,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 3773134716683633453}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.1, y: -2.1, z: -3.4570026}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -10.564, y: 2.8104, z: -3.4570026}
+  m_LocalScale: {x: 10.43657, y: 10.43657, z: 10.43657}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -52,7 +50,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -98,8 +96,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.5, y: 1}
+  m_Offset: {x: 0.0067423405, y: -0.0020710567}
+  m_Size: {x: 0.1734589, y: 0.28331172}
   m_Direction: 0
 --- !u!212 &5034071408292895838
 SpriteRenderer:
@@ -145,7 +143,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: aa6861ad8cf68784eba5a7c2b6acca43, type: 3}
+  m_Sprite: {fileID: -8195753727382534561, guid: ed4f6dc6742040d49855035a84c882ef, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -168,34 +166,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ffb089286b75ad489a4f3570e33873b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wordsToTeach: []
-  dialogueText: {fileID: 0}
---- !u!114 &855356541723564423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3773134716683633453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5416d676ac488fb4eb01557e6563cd55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactRange: 3
---- !u!114 &2297081782863652489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3773134716683633453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91f295ec40f5f8a4da3dd610d4d26e68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wordToLearn: 
-  npcDialogue: {fileID: 5957304556754799002}
-  isNPC: 0
-  isReusable: 0
+  wordsToTeach:
+  - Hello
+  originalDialogue: 'salve quid agis
+
+'
+  translatedDialogue: Hello, how are you?
+  requiredLanguage: {fileID: 11400000, guid: 437b901f64bd45142a5b5b494a7fd857, type: 2}

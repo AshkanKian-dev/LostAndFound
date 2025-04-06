@@ -1,41 +1,49 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
+[RequireComponent(typeof(EdgeCollider2D))]
 public class MapBoundaryCollider : MonoBehaviour
 {
-    // Assign your Tilemap here in the Inspector.
-    public Tilemap mapTilemap;
+    public bool generateOnStart = false;
 
-    void Start()
+    private void Start()
     {
-        if (mapTilemap == null)
+        if (generateOnStart)
         {
-            Debug.LogError("MapBoundaryCollider: No Tilemap assigned!");
+            GenerateBoundary();
+        }
+    }
+
+    public void GenerateBoundary()
+    {
+        Tilemap tilemap = GetComponent<Tilemap>();
+        if (tilemap == null)
+        {
+            Debug.LogError("Tilemap component not found!");
             return;
         }
 
-        // Retrieve the cell bounds of the tilemap.
-        BoundsInt cellBounds = mapTilemap.cellBounds;
+        Bounds bounds = tilemap.localBounds;
 
-        // Convert the cell bounds to world positions.
-        Vector3 min = mapTilemap.CellToWorld(cellBounds.min);
-        Vector3 max = mapTilemap.CellToWorld(cellBounds.max);
+        Vector2 bottomLeft = new Vector2(bounds.min.x, bounds.min.y);
+        Vector2 topLeft = new Vector2(bounds.min.x, bounds.max.y);
+        Vector2 topRight = new Vector2(bounds.max.x, bounds.max.y);
+        Vector2 bottomRight = new Vector2(bounds.max.x, bounds.min.y);
 
-        // Calculate the center if you want to reposition the GameObject (optional).
-        Vector3 center = (min + max) / 2f;
-        transform.position = center;
+        Vector2[] edgePoints = new Vector2[]
+        {
+            bottomLeft,
+            topLeft,
+            topRight,
+            bottomRight,
+            bottomLeft // loop back
+        };
 
-        // Create an array of points for the EdgeCollider2D.
-        Vector2[] points = new Vector2[5];
-        points[0] = new Vector2(min.x, min.y);
-        points[1] = new Vector2(min.x, max.y);
-        points[2] = new Vector2(max.x, max.y);
-        points[3] = new Vector2(max.x, min.y);
-        points[4] = points[0]; // Close the loop.
+        EdgeCollider2D edge = GetComponent<EdgeCollider2D>();
+        edge.points = edgePoints;
+        edge.edgeRadius = 0f;
+        edge.isTrigger = false;
 
-        // Get the EdgeCollider2D component and set its points.
-        EdgeCollider2D edgeCollider = GetComponent<EdgeCollider2D>();
-        edgeCollider.points = points;
+        Debug.Log("✅ Boundary generated manually.");
     }
-
 }

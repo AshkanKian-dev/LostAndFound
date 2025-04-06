@@ -1,9 +1,11 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractionSystem : MonoBehaviour
 {
     public float interactRange = 2f;
     public KeyCode interactKey = KeyCode.F;
+
     private IInteractable nearbyInteractable;
 
     void Update()
@@ -18,27 +20,39 @@ public class InteractionSystem : MonoBehaviour
 
     void DetectInteractable()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRange);
-        float closestDist = Mathf.Infinity;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, interactRange);
         IInteractable closest = null;
+        float closestDistance = float.MaxValue;
 
-        foreach (Collider2D col in hits)
+        foreach (var col in colliders)
         {
-            if (!col.isTrigger) continue;
+            Debug.Log("Checking collider: " + col.gameObject.name);
 
             IInteractable interactable = col.GetComponent<IInteractable>();
+
             if (interactable != null)
             {
-                float dist = Vector2.Distance(transform.position, col.transform.position);
-                if (dist < closestDist)
+                float distance = Vector2.Distance(transform.position, col.transform.position);
+                Debug.Log("Found interactable: " + col.gameObject.name + " at distance " + distance);
+
+                if (distance < closestDistance)
                 {
-                    closestDist = dist;
                     closest = interactable;
+                    closestDistance = distance;
                 }
+            }
+            else
+            {
+                Debug.Log(col.gameObject.name + " has no IInteractable.");
             }
         }
 
         nearbyInteractable = closest;
+
+        if (nearbyInteractable != null)
+        {
+            Debug.Log("Nearest interactable: " + ((MonoBehaviour)nearbyInteractable).gameObject.name);
+        }
     }
 
     void OnDrawGizmosSelected()
