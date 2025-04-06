@@ -7,6 +7,11 @@ public class DialogueUIManager : MonoBehaviour
 
     public GameObject dialogueBox;
     public TextMeshProUGUI dialogueText;
+    public bool IsDialogueActive()
+    {
+        return dialogueBox.activeSelf;
+    }
+
 
     void Awake()
     {

@@ -3,14 +3,14 @@ using UnityEngine;
 public class InteractionSystem : MonoBehaviour
 {
     public float interactRange = 2f;
-    private IInteractable nearbyInteractable;  // Stores the currently interactable object
+    public KeyCode interactKey = KeyCode.F;
+    private IInteractable nearbyInteractable;
 
     void Update()
     {
         DetectInteractable();
 
-        // Check if player presses "F" to interact
-        if (Input.GetKeyDown(KeyCode.F) && nearbyInteractable != null)
+        if (Input.GetKeyDown(interactKey) && nearbyInteractable != null)
         {
             nearbyInteractable.Interact();
         }
@@ -18,22 +18,32 @@ public class InteractionSystem : MonoBehaviour
 
     void DetectInteractable()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, interactRange);
-        foreach (Collider2D col in colliders)
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRange);
+        float closestDist = Mathf.Infinity;
+        IInteractable closest = null;
+
+        foreach (Collider2D col in hits)
         {
+            if (!col.isTrigger) continue;
+
             IInteractable interactable = col.GetComponent<IInteractable>();
             if (interactable != null)
             {
-                nearbyInteractable = interactable;  // Register this interactable object
-                return;  // Exit loop as we've found an interactable object
+                float dist = Vector2.Distance(transform.position, col.transform.position);
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closest = interactable;
+                }
             }
         }
-        nearbyInteractable = null;  // No interactable found within range
+
+        nearbyInteractable = closest;
     }
 
-    // Register an interactable object (called when the player is in range)
-    public void RegisterInteractable(IInteractable interactable)
+    void OnDrawGizmosSelected()
     {
-        nearbyInteractable = interactable;  // Store the interactable object
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, interactRange);
     }
 }
