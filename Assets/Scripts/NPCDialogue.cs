@@ -43,15 +43,7 @@ public class NPCDialogue : MonoBehaviour, IInteractable
 
     void DisplayDialogue()
     {
+        // For demonstration, simply output to the console.
         Debug.Log("NPC dialogue: " + originalDialogue);
-    }
-
-    // This method will be called when the player exits the NPC's collider.
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            DialogueUIManager.Instance.HideDialogue();
-        }
     }
 }
