@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class DeathZone : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (other.CompareTag("Player"))
+        if (collision.collider.CompareTag("Player"))
         {
-            Debug.Log("Player entered DeathZone! Game over triggered.");
+            Debug.Log("Player collided with DeathZone! Game over triggered.");
 
             // Find the GameOverManager in the scene and show the game over screen
             GameOverManager gameOverManager = Object.FindAnyObjectByType<GameOverManager>();
@@ -16,7 +16,7 @@ public class DeathZone : MonoBehaviour
             }
 
             // Optionally, disable the player to prevent further input
-            other.gameObject.SetActive(false);
+            collision.gameObject.SetActive(false);
         }
     }
 }
