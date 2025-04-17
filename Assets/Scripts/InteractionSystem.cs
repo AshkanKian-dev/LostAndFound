@@ -1,58 +1,52 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InteractionSystem : MonoBehaviour
 {
+    [Header("Interaction Settings")]
+    [Tooltip("How far from the player we can interact.")]
     public float interactRange = 2f;
     public KeyCode interactKey = KeyCode.F;
 
+    [Header("UI")]
+    [SerializeField] private GameObject interactPromptUI;
+
     private IInteractable nearbyInteractable;
+
+    void Start()
+    {
+        if (interactPromptUI != null)
+            interactPromptUI.SetActive(false);
+    }
 
     void Update()
     {
         DetectInteractable();
 
         if (Input.GetKeyDown(interactKey) && nearbyInteractable != null)
-        {
             nearbyInteractable.Interact();
-        }
     }
 
     void DetectInteractable()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, interactRange);
-        IInteractable closest = null;
-        float closestDistance = float.MaxValue;
+        nearbyInteractable = null;
+        float closestDist = float.MaxValue;
 
-        foreach (var col in colliders)
+        // grab every Collider2D (including triggers) within range
+        foreach (var col in Physics2D.OverlapCircleAll(transform.position, interactRange))
         {
-            Debug.Log("Checking collider: " + col.gameObject.name);
+            var interactable = col.GetComponent<IInteractable>();
+            if (interactable == null) continue;
 
-            IInteractable interactable = col.GetComponent<IInteractable>();
-
-            if (interactable != null)
+            float d = Vector2.Distance(transform.position, col.transform.position);
+            if (d < closestDist)
             {
-                float distance = Vector2.Distance(transform.position, col.transform.position);
-                Debug.Log("Found interactable: " + col.gameObject.name + " at distance " + distance);
-
-                if (distance < closestDistance)
-                {
-                    closest = interactable;
-                    closestDistance = distance;
-                }
-            }
-            else
-            {
-                Debug.Log(col.gameObject.name + " has no IInteractable.");
+                closestDist = d;
+                nearbyInteractable = interactable;
             }
         }
 
-        nearbyInteractable = closest;
-
-        if (nearbyInteractable != null)
-        {
-            Debug.Log("Nearest interactable: " + ((MonoBehaviour)nearbyInteractable).gameObject.name);
-        }
+        if (interactPromptUI != null)
+            interactPromptUI.SetActive(nearbyInteractable != null);
     }
 
     void OnDrawGizmosSelected()
