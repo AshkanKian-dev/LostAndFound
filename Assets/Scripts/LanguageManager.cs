@@ -5,25 +5,15 @@ public class LanguageManager : MonoBehaviour
 {
     public static LanguageManager Instance;
 
-    private Dictionary<string, string> wordDictionary = new Dictionary<string, string>()
-    {
-        { "zok", "hello" },
-        { "mivor", "friend" },
-        { "talun", "food" },
-        { "varak", "danger" },
-        { "shari", "welcome" },
-        { "tavok", "house" }
-    };
+    [System.Serializable]
+    public struct WordEntry { public string key; public string translation; }
 
-    private Dictionary<string, int> wordExposure = new Dictionary<string, int>();
+    [Header("Dictionary")]
+    public List<WordEntry> wordList;
+
+    private Dictionary<string, string> dict;
     private HashSet<string> learnedWords = new HashSet<string>();
-    private Dictionary<string, float> wordCooldown = new Dictionary<string, float>();
-    private float learnCooldown = 5f;
-
-    private HashSet<string> learnedLanguages = new HashSet<string>(); // 🔥 NEW
-
-    public delegate void OnWordLearned(string word, string translation);
-    public event OnWordLearned WordLearned;
+    private HashSet<string> learnedLanguages = new HashSet<string>();
 
     void Awake()
     {
@@ -31,6 +21,10 @@ public class LanguageManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            dict = new Dictionary<string, string>();
+            foreach (var e in wordList)
+                dict[e.key] = e.translation;
         }
         else
         {
@@ -38,113 +32,49 @@ public class LanguageManager : MonoBehaviour
         }
     }
 
-    // 🔥 NEW - Learn a full language (e.g., Ancient, Highland, Temple)
-    public void LearnLanguage(string languageName)
+    // Mark a full language as known
+    public void LearnLanguage(string lang)
     {
-        if (!learnedLanguages.Contains(languageName))
-        {
-            learnedLanguages.Add(languageName);
-            Debug.Log("Learned new language: " + languageName);
-        }
+        if (learnedLanguages.Add(lang))
+            LanguageLearnedUI.Instance.ShowPopup(lang);
     }
 
-    // 🔥 NEW - Check if the player knows a specific language
-    public bool KnowsLanguage(string languageName)
-    {
-        return learnedLanguages.Contains(languageName);
-    }
+    public bool KnowsLanguage(string lang) => learnedLanguages.Contains(lang);
 
-    public string TranslateSentence(string sentence)
-    {
-        string[] words = sentence.Split(' ');
-        List<string> translatedWords = new List<string>();
-
-        foreach (string word in words)
-        {
-            if (wordDictionary.ContainsKey(word))
-            {
-                if (learnedWords.Contains(word))
-                {
-                    translatedWords.Add(wordDictionary[word]);
-                }
-                else
-                {
-                    translatedWords.Add(RevealPartialWord(word));
-                }
-            }
-            else
-            {
-                translatedWords.Add(word);
-            }
-        }
-
-        return ConstructGrammaticallyCorrectSentence(translatedWords);
-    }
-
-    private string ConstructGrammaticallyCorrectSentence(List<string> words)
-    {
-        if (words.Count == 0) return "";
-        words[0] = char.ToUpper(words[0][0]) + words[0].Substring(1);
-        return string.Join(" ", words) + ".";
-    }
-
-    private string RevealPartialWord(string word)
-    {
-        if (!wordExposure.ContainsKey(word))
-            wordExposure[word] = 0;
-
-        wordExposure[word]++;
-
-        int revealCount = Mathf.Clamp(wordExposure[word], 1, wordDictionary[word].Length);
-        char[] revealedWord = GenerateConsistentGibberish(word).ToCharArray();
-
-        for (int i = 0; i < revealCount; i++)
-        {
-            revealedWord[i] = wordDictionary[word][i];
-        }
-
-        return new string(revealedWord);
-    }
-
-    private string GenerateConsistentGibberish(string word)
-    {
-        const string letters = "abcdefghijklmnopqrstuvwxyz";
-        char[] gibberish = new char[word.Length];
-
-        for (int i = 0; i < word.Length; i++)
-        {
-            gibberish[i] = letters[(word[i] * 3) % letters.Length];
-        }
-
-        return new string(gibberish);
-    }
-
+    // Mark one word as known
     public void LearnWord(string word)
     {
-        if (!wordDictionary.ContainsKey(word) || learnedWords.Contains(word)) return;
-
-        if (wordCooldown.ContainsKey(word) && Time.time - wordCooldown[word] < learnCooldown)
-            return;
-
-        learnedWords.Add(word);
-        wordCooldown[word] = Time.time;
-        wordExposure.Remove(word);
-
-        WordLearned?.Invoke(word, wordDictionary[word]);
+        if (dict.ContainsKey(word) && learnedWords.Add(word))
+            LanguageLearnedUI.Instance.Show($"{word} = {dict[word]}");
     }
 
-    public void LearnWordFromItem(string word)
+    // Translate only the words you’ve learned
+    public string TranslateSentence(string sentence)
     {
-        LearnWord(word);
+        var parts = sentence.Split(' ');
+        for (int i = 0; i < parts.Length; i++)
+        {
+            if (learnedWords.Contains(parts[i]) && dict.TryGetValue(parts[i], out var t))
+                parts[i] = t;
+        }
+        return string.Join(" ", parts);
     }
 
+    // ─── These two let your JournalUI compile ───
+
+    /// <summary>
+    /// Returns a copy of all words the player has learned so far.
+    /// </summary>
     public List<string> GetLearnedWords()
     {
         return new List<string>(learnedWords);
     }
 
+    /// <summary>
+    /// Returns the translation for a given word, or the original word if unknown.
+    /// </summary>
     public string GetTranslation(string word)
     {
-        return wordDictionary.ContainsKey(word) ? wordDictionary[word] : "???";
+        return dict.TryGetValue(word, out var t) ? t : word;
     }
 }

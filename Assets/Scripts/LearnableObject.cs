@@ -14,14 +14,20 @@ public class LearnableObject : MonoBehaviour, IInteractable
 
         if (languageToLearn != null && LanguageManager.Instance != null)
         {
+            // Teach the full language
             LanguageManager.Instance.LearnLanguage(languageToLearn.languageName);
             Debug.Log($"{gameObject.name} taught you the language: {languageToLearn.languageName}");
 
+            // Teach a single word, if set
             if (!string.IsNullOrEmpty(WordToLearn))
                 LanguageManager.Instance.LearnWord(WordToLearn);
 
-            if (LanguageLearnedUI.Instance != null)
-                LanguageLearnedUI.Instance.ShowPopup(languageToLearn.languageName);
+            // Show the “you learned the X language!” popup
+            LanguageLearnedUI.Instance?.ShowPopup(languageToLearn.languageName);
+
+            // ——— Clear the quest indicator ———
+            if (QuestManager.Instance != null)
+                QuestManager.Instance.ClearQuestArea();
 
             hasBeenLearned = true;
         }

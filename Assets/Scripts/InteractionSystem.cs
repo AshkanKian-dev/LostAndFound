@@ -22,29 +22,39 @@ public class InteractionSystem : MonoBehaviour
     {
         DetectInteractable();
 
+        // if you press F and something is in range, interact
         if (Input.GetKeyDown(interactKey) && nearbyInteractable != null)
             nearbyInteractable.Interact();
     }
 
     void DetectInteractable()
     {
-        nearbyInteractable = null;
+        // find the closest IInteractable
+        IInteractable closest = null;
         float closestDist = float.MaxValue;
 
-        // grab every Collider2D (including triggers) within range
         foreach (var col in Physics2D.OverlapCircleAll(transform.position, interactRange))
         {
-            var interactable = col.GetComponent<IInteractable>();
-            if (interactable == null) continue;
+            var inter = col.GetComponent<IInteractable>();
+            if (inter == null) continue;
 
             float d = Vector2.Distance(transform.position, col.transform.position);
             if (d < closestDist)
             {
                 closestDist = d;
-                nearbyInteractable = interactable;
+                closest = inter;
             }
         }
 
+        // if we just left an interactable, hide its dialogue
+        if (closest == null && nearbyInteractable != null)
+        {
+            DialogueUIManager.Instance?.HideDialogue();
+        }
+
+        nearbyInteractable = closest;
+
+        // toggle the “Press F” prompt
         if (interactPromptUI != null)
             interactPromptUI.SetActive(nearbyInteractable != null);
     }
