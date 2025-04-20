@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Elias neutral_0: -3708047304456871153
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

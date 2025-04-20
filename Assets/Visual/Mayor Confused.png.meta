@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Mayor Confused_0: 4679705512800187839
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

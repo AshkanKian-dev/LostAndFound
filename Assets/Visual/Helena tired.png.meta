@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Helena tired_0: -4889565653908165693
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

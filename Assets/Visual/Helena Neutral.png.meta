@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Helena Neutral_0: 3149156552414410280
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
