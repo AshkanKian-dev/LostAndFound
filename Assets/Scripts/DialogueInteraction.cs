@@ -1,72 +1,115 @@
-﻿using UnityEngine;
+﻿// DialogueInteraction.cs
+using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 public class DialogueInteraction : MonoBehaviour, IInteractable
 {
-    [Header("Raw (Latin) Lines")]
+    [Header("Conversation Lines (in original language)")]
     [TextArea] public string[] originalLines;
 
     [Header("Translated (English) Lines")]
     [TextArea] public string[] translatedLines;
 
-    [Header("Portrait")]
-    [Tooltip("Character headshot for VN-style dialogue.")]
+    [Header("Portrait (optional)")]
     public Sprite portrait;
 
-    [Header("Language Unlock")]
-    [Tooltip("The language this NPC speaks (learn it via the tome).")]
+    [Header("Language Unlock (optional)")]
     public LanguageData requiredLanguage;
 
-    [Header("Quest Area Settings")]
-    [Tooltip("Drag here the empty GameObject positioned at the tome’s location.")]
+    [Header("Quest Settings")]
+    [Tooltip("The LearnableObject (e.g. your tomb) to unlock")]
+    public LearnableObject targetTomb;
+    [Tooltip("Where to spawn the quest indicator ring")]
     public Transform questLocation;
 
-    private int currentLine = 0;
-    private bool inConversation = false;
-    private bool hintShown = false;
+    [Header("Quest Message")]
+    [TextArea]
+    [Tooltip("What to show when the tomb first opens")]
+    public string questMessage = "The tomb is now open! Go learn its secrets.";
+
+    bool questStarted = false;
+    bool inConversation = false;
+    bool hintShown = false;
+    int currentLine = 0;
 
     public void Interact()
     {
-        // Do we already know this language?
-        bool knows = (requiredLanguage == null)
-                     || LanguageManager.Instance.KnowsLanguage(requiredLanguage.languageName);
+        // ─── 1) on very first F → unlock + ring + show latin + custom toast ───
+        if (!questStarted)
+        {
+            questStarted = true;
 
-        // If not known yet, show raw line + one‑time hint + area indicator
+            if (targetTomb != null)
+                targetTomb.Unlock();
+
+            if (questLocation != null)
+                QuestManager.Instance.ShowQuestArea(questLocation.position);
+
+            // show the first Latin line
+            if (originalLines.Length > 0)
+            {
+                DialogueUIManager.Instance.ShowDialogue(
+                    originalLines[currentLine],
+                    portrait
+                );
+                // advance so next time we cycle to the next line
+                currentLine = (currentLine + 1) % originalLines.Length;
+                inConversation = true;
+            }
+
+            // show your custom center‑screen toast
+            LanguageLearnedUI.Instance.Show(
+                questMessage,
+                requireInput: false,
+                autoHideSec: 5f
+            );
+
+            return;
+        }
+
+        // ─── 2) after that, carry on with your usual dialogue logic ───
+        bool knows = requiredLanguage == null ||
+                     LanguageManager.Instance.KnowsLanguage(requiredLanguage.languageName);
+
         if (!knows)
         {
-            ShowOriginalLine();
+            // speak Latin
+            DialogueUIManager.Instance.ShowDialogue(
+                originalLines[currentLine],
+                portrait
+            );
+            currentLine = (currentLine + 1) % originalLines.Length;
 
             if (!hintShown)
             {
-                // 1) tell them where to look
                 LanguageLearnedUI.Instance.Show(
                     $"You can’t understand {requiredLanguage.languageName}! " +
-                    $"Find the {requiredLanguage.languageName} tome to learn it."
+                    $"Find the {requiredLanguage.languageName} tome to learn it.",
+                    requireInput: false,
+                    autoHideSec: 4f
                 );
-
-                // 2) spawn the ring at questLocation
-                if (questLocation != null && QuestManager.Instance != null)
-                    QuestManager.Instance.ShowQuestArea(questLocation.position);
-
                 hintShown = true;
             }
             return;
         }
 
-        // Once learned, clear the indicator and run a full conversation
-        if (hintShown && QuestManager.Instance != null)
-            QuestManager.Instance.ClearQuestArea();
-
+        // now that you know the language, show English lines
         if (!inConversation)
         {
             inConversation = true;
             currentLine = 0;
-            ShowTranslatedLine();
+            DialogueUIManager.Instance.ShowDialogue(
+                translatedLines[currentLine],
+                portrait
+            );
         }
         else if (currentLine < translatedLines.Length - 1)
         {
             currentLine++;
-            ShowTranslatedLine();
+            DialogueUIManager.Instance.ShowDialogue(
+                translatedLines[currentLine],
+                portrait
+            );
         }
         else
         {
@@ -74,33 +117,16 @@ public class DialogueInteraction : MonoBehaviour, IInteractable
         }
     }
 
-    private void ShowOriginalLine()
-    {
-        if (originalLines.Length == 0) return;
-        DialogueUIManager.Instance.ShowDialogue(originalLines[currentLine], portrait);
-        currentLine = (currentLine + 1) % originalLines.Length;
-    }
-
-    private void ShowTranslatedLine()
-    {
-        if (translatedLines.Length == 0) return;
-        DialogueUIManager.Instance.ShowDialogue(translatedLines[currentLine], portrait);
-    }
-
-    private void EndConversation()
+    void EndConversation()
     {
         DialogueUIManager.Instance.HideDialogue();
         inConversation = false;
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
-        // Hide the UI if we get turned off mid‑chat
-        if (DialogueUIManager.Instance != null
-         && DialogueUIManager.Instance.IsDialogueActive())
-        {
+        if (DialogueUIManager.Instance != null && DialogueUIManager.Instance.IsDialogueActive())
             DialogueUIManager.Instance.HideDialogue();
-        }
         inConversation = false;
     }
 }
