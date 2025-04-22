@@ -30,61 +30,44 @@ public class LanguageManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
             // build our lookup dictionary
             dict = new Dictionary<string, string>();
             foreach (var e in wordList)
                 dict[e.key] = e.translation;
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        else Destroy(gameObject);
     }
 
     /// <summary>
     /// Call to mark a full language as learned.
-    /// Will fire the pop‑up, the event, and test for win condition.
+    /// Fires the event and only unlocks exit if you have actually
+    /// defined a non‑empty allLanguages list AND met that count.
     /// </summary>
     public void LearnLanguage(string lang)
     {
-        if (learnedLanguages.Add(lang))
+        if (!learnedLanguages.Add(lang))
+            return;
+
+        // notify any listeners (e.g. exit NPC)
+        LanguageLearnedEvent?.Invoke(lang);
+
+        // check win condition only if you have a real list
+        if (allLanguages != null
+            && allLanguages.Length > 0
+            && learnedLanguages.Count >= allLanguages.Length)
         {
-            // NO MORE popup here!
-
-            // notify any listeners (e.g. exit NPC)
-            LanguageLearnedEvent?.Invoke(lang);
-
-            // check win condition
-            if (learnedLanguages.Count >= allLanguages.Length)
-                GameEndManager.Instance?.UnlockExit();
+            GameEndManager.Instance?.UnlockExit();
         }
     }
 
+    public bool KnowsLanguage(string lang) => learnedLanguages.Contains(lang);
 
-    /// <summary>
-    /// Query whether the player knows a given language.
-    /// </summary>
-    public bool KnowsLanguage(string lang)
-    {
-        return learnedLanguages.Contains(lang);
-    }
-
-    /// <summary>
-    /// Call to mark a single word as learned.
-    /// Fires a small pop‑up “word = translation.”
-    /// </summary>
     public void LearnWord(string word)
     {
         if (dict.ContainsKey(word) && learnedWords.Add(word))
-        {
             LanguageLearnedUI.Instance?.Show($"{word} = {dict[word]}");
-        }
     }
 
-    /// <summary>
-    /// Translate a sentence, replacing only the words you’ve learned.
-    /// </summary>
     public string TranslateSentence(string sentence)
     {
         var parts = sentence.Split(' ');
@@ -96,24 +79,7 @@ public class LanguageManager : MonoBehaviour
         return string.Join(" ", parts);
     }
 
-    /// <summary>
-    /// For your journal UI.
-    /// </summary>
-    public List<string> GetLearnedWords()
-    {
-        return new List<string>(learnedWords);
-    }
-
-    /// <summary>
-    /// For your journal UI.
-    /// </summary>
-    public string GetTranslation(string word)
-    {
-        return dict.TryGetValue(word, out var t) ? t : word;
-    }
-
-    /// <summary>
-    /// How many languages have you learned so far?
-    /// </summary>
+    public List<string> GetLearnedWords() => new List<string>(learnedWords);
+    public string GetTranslation(string word) => dict.TryGetValue(word, out var t) ? t : word;
     public int LearnedLanguageCount => learnedLanguages.Count;
 }

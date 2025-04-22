@@ -1,124 +1,134 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class CutsceneManager : MonoBehaviour
 {
     public static CutsceneManager Instance;
 
-    [Header("UI")]
-    public GameObject cutscenePanel;     // full‑screen panel (must have a CanvasGroup!)
-    public Image cutsceneImage;       // your ending sprite
-    public TextMeshProUGUI cutsceneText; // your ending text
+    [Header("UI (Panel with CanvasGroup)")]
+    public CanvasGroup panelGroup;          // Fullscreen overlay panel
+    public Image cutsceneImage;             // Cutscene sprite
+    public TextMeshProUGUI cutsceneText;    // Cutscene text
 
-    [Header("Audio (optional)")]
-    public AudioSource audioSource;      // drag in an AudioSource
-    public AudioClip endingMusic;      // your ending music clip
+    [Header("Audio")]
+    public AudioSource mainAudioSource;     // Gameplay BGM
+    public AudioSource cutsceneAudioSource; // Cutscene music source
+    public AudioClip endingMusic;           // Cutscene soundtrack
 
-    [Header("Timing")]
-    public float fadeToBlackDuration = 2f;
-    public float holdBlackDuration = 1f;
-    public float fadeFromBlackDuration = 2f;
+    [Header("Timing (seconds)")]
+    public float fadeDuration = 1f;         // Fade in/out duration
+    public float holdDuration = 5f;         // How long to show cutscene
 
-    private CanvasGroup panelGroup;
-    private Action onComplete;
-    private bool active;
+    private Coroutine cutsceneRoutine;
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
-        else { Destroy(gameObject); return; }
-
-        // cache the CanvasGroup for fading
-        panelGroup = cutscenePanel.GetComponent<CanvasGroup>();
-        if (panelGroup == null)
+        // Singleton pattern
+        if (Instance == null)
         {
-            Debug.LogError("CutsceneManager: cutscenePanel needs a CanvasGroup!");
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
         }
 
-        // hide to start
-        cutscenePanel.SetActive(false);
-        panelGroup.alpha = 0f;
-    }
-
-    void Update()
-    {
-        // allow manual skip if you like (press F)
-        if (active && Input.GetKeyDown(KeyCode.F))
+        // Ensure panel starts hidden
+        if (panelGroup != null)
         {
-            StopAllCoroutines();
-            EndCutscene();
+            panelGroup.alpha = 0f;
+            panelGroup.gameObject.SetActive(false);
         }
     }
 
     /// <summary>
-    /// Plays a fancy fade‑to‑black → reveal cutscene.
+    /// Begins the cutscene: fade in, hold, fade out, then load MainMenu.
     /// </summary>
-    public void PlayCutscene(Sprite img, string text, Action onDone = null)
+    public void PlayCutscene(Sprite img, string text)
     {
+        // Set content
         if (cutsceneImage != null) cutsceneImage.sprite = img;
         if (cutsceneText != null) cutsceneText.text = text;
-        if (cutscenePanel != null) cutscenePanel.SetActive(true);
 
-        onComplete = onDone;
-        active = true;
-
-        // freeze gameplay
+        // Show panel and pause gameplay
+        if (panelGroup != null)
+        {
+            panelGroup.gameObject.SetActive(true);
+            panelGroup.alpha = 0f;
+        }
         Time.timeScale = 0f;
 
-        // start the sequence
-        StartCoroutine(CutsceneRoutine());
-    }
-
-    private IEnumerator CutsceneRoutine()
-    {
-        // 1) Fade to black
-        yield return FadeCanvasGroup(panelGroup, 0f, 1f, fadeToBlackDuration);
-
-        // 2) Hold full black
-        yield return new WaitForSecondsRealtime(holdBlackDuration);
-
-        // 3) Play ending music if provided
-        if (audioSource != null && endingMusic != null)
+        // Switch audio
+        mainAudioSource?.Stop();
+        if (cutsceneAudioSource != null && endingMusic != null)
         {
-            audioSource.clip = endingMusic;
-            audioSource.Play();
+            cutsceneAudioSource.clip = endingMusic;
+            cutsceneAudioSource.volume = 1f;
+            cutsceneAudioSource.Play();
         }
 
-        // 4) Fade back in from black to reveal your image/text
-        yield return FadeCanvasGroup(panelGroup, 1f, 0f, fadeFromBlackDuration);
-
-        // 5) If you want to hold the final image/music for its length:
-        if (endingMusic != null && audioSource != null)
-            yield return new WaitForSecondsRealtime(endingMusic.length);
-
-        // 6) Finish
-        EndCutscene();
+        // Start sequence
+        cutsceneRoutine = StartCoroutine(CutsceneSequence());
     }
 
-    private IEnumerator FadeCanvasGroup(CanvasGroup cg, float from, float to, float duration)
+    private IEnumerator CutsceneSequence()
     {
-        float t = 0f;
-        while (t < duration)
+        // Fade in
+        yield return Fade(panelGroup, 0f, 1f, fadeDuration);
+
+        // Hold cutscene
+        yield return new WaitForSecondsRealtime(holdDuration);
+
+        // Fade out
+        yield return Fade(panelGroup, 1f, 0f, fadeDuration);
+
+        // Restore time
+        Time.timeScale = 1f;
+
+        // Hide panel
+        if (panelGroup != null)
+            panelGroup.gameObject.SetActive(false);
+
+        // Load main menu
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    private IEnumerator Fade(CanvasGroup cg, float start, float end, float duration)
+    {
+        if (cg == null) yield break;
+        float elapsed = 0f;
+        cg.alpha = start;
+        while (elapsed < duration)
         {
-            t += Time.unscaledDeltaTime;
-            cg.alpha = Mathf.Lerp(from, to, t / duration);
+            elapsed += Time.unscaledDeltaTime;
+            cg.alpha = Mathf.Lerp(start, end, elapsed / duration);
             yield return null;
         }
-        cg.alpha = to;
+        cg.alpha = end;
     }
 
-    private void EndCutscene()
+    /// <summary>
+    /// Skip the cutscene, immediately return to menu.
+    /// </summary>
+    public void SkipCutscene()
     {
-        // hide panel
-        if (cutscenePanel != null) cutscenePanel.SetActive(false);
+        if (cutsceneRoutine != null)
+            StopCoroutine(cutsceneRoutine);
 
-        active = false;
-        // un‑pause
+        cutsceneAudioSource?.Stop();
         Time.timeScale = 1f;
-        // fire callback
-        onComplete?.Invoke();
+
+        if (panelGroup != null)
+        {
+            panelGroup.alpha = 0f;
+            panelGroup.gameObject.SetActive(false);
+        }
+
+        SceneManager.LoadScene("MainMenu");
     }
 }

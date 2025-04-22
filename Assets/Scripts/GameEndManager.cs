@@ -6,25 +6,26 @@ public class GameEndManager : MonoBehaviour
     public static GameEndManager Instance;
 
     [Header("Exit Setup")]
-    [Tooltip("The GameObject (e.g. passport desk collider) to enable once you've learned all languages")]
+    [Tooltip("The GameObject (e.g. your boat) to enable once you've learned all languages")]
     public GameObject exitObject;
 
     [Header("On‑Unlock Message")]
     [TextArea]
-    [Tooltip("What text to show when the exit unlocks")]
-    public string unlockMessage = "Congratulations! You may now collect your passport.";
-
-    [Tooltip("Should the player have to press F to dismiss this message?")]
+    public string unlockMessage = "The path is clear! Press F to board.";
     public bool requireInputToDismiss = true;
-
-    [Tooltip("If not waiting for input, how long before auto‑hide?")]
     public float autoHideSeconds = 3f;
+
+    [Header("Audio Sources")]
+    [Tooltip("Your normal gameplay/music AudioSource")]
+    public AudioSource mainAudioSource;
+    [Tooltip("AudioSource for your cutscene music")]
+    public AudioSource cutsceneAudioSource;
 
     [Header("Ending Cutscene (Optional)")]
     public Sprite endingSprite;
     [TextArea]
     public string endingText = "Thank you for playing!";
-    public bool playEndingCutscene = false;
+    public AudioClip endingMusic;
 
     void Awake()
     {
@@ -32,60 +33,66 @@ public class GameEndManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            if (exitObject) exitObject.SetActive(false);
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
-
-        // hide the exit until it's unlocked
-        if (exitObject != null)
-            exitObject.SetActive(false);
     }
 
-    /// <summary>
-    /// Called by LanguageManager once you've learned every language.
-    /// </summary>
+    void Start()
+    {
+        // if you didn't set up any win‐list, let them board immediately
+        var lm = LanguageManager.Instance;
+        bool hasWinList = lm != null
+                          && lm.allLanguages != null
+                          && lm.allLanguages.Length > 0;
+        if (exitObject != null)
+            exitObject.SetActive(!hasWinList);
+    }
+
     public void UnlockExit()
     {
-        Debug.Log("GameEndManager.UnlockExit()");
-
-        // 1) Enable the exit object (e.g. passport desk collider)
-        if (exitObject != null)
-            exitObject.SetActive(true);
-
-        // 2) Show your custom on‑screen toast
+        if (exitObject) exitObject.SetActive(true);
         LanguageLearnedUI.Instance.Show(
             unlockMessage,
-            requireInput: requireInputToDismiss,
-            autoHideSec: autoHideSeconds,
-            onDone: () =>
-            {
-                // 3) Optionally trigger the final cutscene once the player dismisses it
-                if (playEndingCutscene)
-                    TriggerEndingCutscene();
-            }
+            requireInputToDismiss,
+            autoHideSeconds
         );
     }
 
-    /// <summary>
-    /// If you want to drive into a final cutscene when the player actually uses the exit.
-    /// </summary>
     public void TriggerEndingCutscene()
     {
+        // fallback if you forgot to add a CutsceneManager to the scene
         if (CutsceneManager.Instance == null)
         {
-            Debug.LogWarning("No CutsceneManager found in scene!");
-            // fallback: just go back to menu
+            Debug.LogWarning("No CutsceneManager found – loading MainMenu immediately.");
             SceneManager.LoadScene("MainMenu");
             return;
         }
 
-        CutsceneManager.Instance.PlayCutscene(
-            endingSprite,
-            endingText,
-            () => SceneManager.LoadScene("MainMenu")
-        );
+        var cm = CutsceneManager.Instance;
+
+        // 1) configure your audio sources on the CutsceneManager
+        if (mainAudioSource != null)
+            cm.mainAudioSource = mainAudioSource;
+
+        if (cutsceneAudioSource != null)
+            cm.cutsceneAudioSource = cutsceneAudioSource;
+
+        // 2) configure the clip
+        if (endingMusic != null)
+            cm.endingMusic = endingMusic;
+
+        // 3) configure the visuals
+        if (endingSprite != null)
+            cm.cutsceneImage.sprite = endingSprite;
+
+        cm.cutsceneText.text = endingText;
+
+        // 4) play it
+        cm.PlayCutscene(endingSprite, endingText);
     }
 }

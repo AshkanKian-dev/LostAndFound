@@ -2,41 +2,53 @@
 
 public class GameEndInteraction : MonoBehaviour, IInteractable
 {
-    private bool exitUnlocked = false;
+    private bool _exitUnlocked = false;
 
     void OnEnable()
     {
-        // subscribe so we know when ALL languages are learned
-        LanguageManager.Instance.LanguageLearnedEvent += OnLanguageLearned;
+        if (LanguageManager.Instance != null)
+            LanguageManager.Instance.LanguageLearnedEvent += OnLanguageLearned;
     }
 
     void OnDisable()
     {
-        LanguageManager.Instance.LanguageLearnedEvent -= OnLanguageLearned;
+        if (LanguageManager.Instance != null)
+            LanguageManager.Instance.LanguageLearnedEvent -= OnLanguageLearned;
     }
 
     private void OnLanguageLearned(string lang)
     {
-        // check if we've now learned them all
-        if (LanguageManager.Instance.LearnedLanguageCount >=
-            LanguageManager.Instance.allLanguages.Length)
-        {
-            exitUnlocked = true;
-        }
+        var lm = LanguageManager.Instance;
+        bool hasWinList = lm.allLanguages != null && lm.allLanguages.Length > 0;
+
+        if (hasWinList && lm.LearnedLanguageCount >= lm.allLanguages.Length)
+            _exitUnlocked = true;
     }
 
     public void Interact()
     {
-        if (!exitUnlocked)
+        var lm = LanguageManager.Instance;
+        bool hasWinList = lm != null
+                          && lm.allLanguages != null
+                          && lm.allLanguages.Length > 0;
+
+        if (!hasWinList)
         {
+            // no win condition defined → go immediately
+            GameEndManager.Instance.TriggerEndingCutscene();
+            return;
+        }
+
+        if (!_exitUnlocked)
+        {
+            int left = lm.allLanguages.Length - lm.LearnedLanguageCount;
             DialogueUIManager.Instance.ShowDialogue(
-                "I still need to find my passport."
+                $"You still need to learn {left} language{(left != 1 ? "s." : ".")}"
             );
             return;
         }
 
-        // final win‐dialogue and cutscene
-        DialogueUIManager.Instance.ShowDialogue("freedom at last!");
+        // all done → trigger final cutscene
         GameEndManager.Instance.TriggerEndingCutscene();
     }
 }
