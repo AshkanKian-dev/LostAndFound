@@ -30,13 +30,13 @@ public class GameEndInteraction : MonoBehaviour, IInteractable
         if (!exitUnlocked)
         {
             DialogueUIManager.Instance.ShowDialogue(
-                "I still need to learn every language before I can leave."
+                "I still need to find my passport."
             );
             return;
         }
 
         // final win‐dialogue and cutscene
-        DialogueUIManager.Instance.ShowDialogue("You hand over the passport—freedom at last!");
+        DialogueUIManager.Instance.ShowDialogue("freedom at last!");
         GameEndManager.Instance.TriggerEndingCutscene();
     }
 }

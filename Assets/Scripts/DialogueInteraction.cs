@@ -83,8 +83,8 @@ public class DialogueInteraction : MonoBehaviour, IInteractable
             if (!hintShown)
             {
                 LanguageLearnedUI.Instance.Show(
-                    $"You can’t understand {requiredLanguage.languageName}! " +
-                    $"Find the {requiredLanguage.languageName} tome to learn it.",
+                    $"" +
+                    $"",
                     requireInput: false,
                     autoHideSec: 4f
                 );
