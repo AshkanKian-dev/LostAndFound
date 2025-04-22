@@ -184,15 +184,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 7721590798901089134, guid: 9997b58b51f33bd44a7054a19c53da1e, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -517,7 +517,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.00109, y: -251.60071}
+  m_AnchoredPosition: {x: 22.998932, y: -251.60071}
   m_SizeDelta: {x: 277.5142, y: 90.4726}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &378601483
@@ -799,7 +799,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2, y: -40}
+  m_AnchoredPosition: {x: 23, y: -40}
   m_SizeDelta: {x: 277.5142, y: 88.2681}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &657398281
@@ -1075,7 +1075,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.0011, y: 165}
+  m_AnchoredPosition: {x: 25, y: 160}
   m_SizeDelta: {x: 588.4285, y: 265.8442}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &832820470
@@ -1364,10 +1364,12 @@ MonoBehaviour:
   cutsceneAudio: {fileID: 0}
   cutsceneMusic: {fileID: 0}
   fadeToBlackDuration: 1
-  holdBlackDuration: 1.5
+  holdBlackDuration: 10
   fadeFromBlackDuration: 1
-  introSprite: {fileID: 251210168834386541, guid: d270778844c07c54c8af8e4754baf1e3, type: 3}
-  introCopy: Are you Ready?
+  introSprite: {fileID: 7721590798901089134, guid: 9997b58b51f33bd44a7054a19c53da1e, type: 3}
+  introCopy: "The adventure of a lifetime, thats what you thought it would be...
+    maybe you bit off more than you could handle\r\n\r\nThe storm certainly was at
+    least.\r"
 --- !u!4 &1011978048
 Transform:
   m_ObjectHideFlags: 0
@@ -1554,7 +1556,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1288740534
 MonoBehaviour:
@@ -1576,7 +1578,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Are you Ready?
+  m_text: 'The adventure of a lifetime, thats what you thought it would be... maybe
+    you bit off more than you could handle
+
+    
+
+    The storm certainly was at
+    least.
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1603,15 +1613,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1861,7 +1871,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 251210168834386541, guid: d270778844c07c54c8af8e4754baf1e3, type: 3}
+  m_Sprite: {fileID: -7742616310230297009, guid: 779dd3d972e80f745bfc79f58320029c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2246,14 +2256,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9339623, g: 0.74279195, b: 0.41852084, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -2579957754792524931, guid: 129d3e39954a9c3488c7355698c24f52, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2307,7 +2317,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.00109, y: -143.0523}
+  m_AnchoredPosition: {x: 22.998932, y: -143.0523}
   m_SizeDelta: {x: 277.5142, y: 92.2453}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1878426003
